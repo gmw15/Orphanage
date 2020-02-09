@@ -9,6 +9,7 @@
 #include "GameFramework/InputSettings.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
+#include "MySaveGame.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
@@ -112,6 +113,10 @@ void AOrphanageCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 {
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
+
+	//Save Game
+	PlayerInputComponent->BindAction("Save", IE_Pressed, this, &AOrphanageCharacter::SaveGame);
+	PlayerInputComponent->BindAction("Load", IE_Pressed, this, &AOrphanageCharacter::LoadGame);
 
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
@@ -297,4 +302,20 @@ bool AOrphanageCharacter::EnableTouchscreenMovement(class UInputComponent* Playe
 	}
 	
 	return false;
+}
+
+void AOrphanageCharacter::SaveGame() {
+	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	SaveGameInstance->PlayerLocation = this->GetActorLocation();
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
+	
+}
+
+void AOrphanageCharacter::LoadGame() {
+	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+	this->SetActorLocation(SaveGameInstance->PlayerLocation);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
+
 }
