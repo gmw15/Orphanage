@@ -11,6 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MySaveGame.h"
 #include "MotionControllerComponent.h"
+#include <EngineGlobals.h>
+#include <Runtime/Engine/Classes/Engine/Engine.h>
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
@@ -305,17 +307,29 @@ bool AOrphanageCharacter::EnableTouchscreenMovement(class UInputComponent* Playe
 }
 
 void AOrphanageCharacter::SaveGame() {
+	
 	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 	SaveGameInstance->PlayerLocation = this->GetActorLocation();
 	UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
-	
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+	UE_LOG(LogTemp, Warning, TEXT("Saved"));
+
 }
 
 void AOrphanageCharacter::LoadGame() {
+
 	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
 	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
 	this->SetActorLocation(SaveGameInstance->PlayerLocation);
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+	UE_LOG(LogTemp, Warning, TEXT("Loaded"));
 
 }

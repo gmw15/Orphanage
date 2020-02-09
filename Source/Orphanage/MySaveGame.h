@@ -16,9 +16,12 @@ class ORPHANAGE_API UMySaveGame : public USaveGame
 
 public:
 
-	UMySaveGame();
-
 	UPROPERTY(EditAnywhere)
 	FVector PlayerLocation;
+
+	UPROPERTY(EditAnywhere)
+	FString PlayerName;
+
+	UMySaveGame();
 	
 };

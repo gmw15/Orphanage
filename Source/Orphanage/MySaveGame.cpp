@@ -4,6 +4,7 @@
 
 UMySaveGame::UMySaveGame(){
 
+	PlayerName = "Glen Joey";
 	PlayerLocation = FVector(0.f, 0.f, 0.f);
 
 }
