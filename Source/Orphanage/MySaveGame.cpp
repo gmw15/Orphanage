@@ -5,6 +5,7 @@
 UMySaveGame::UMySaveGame(){
 
 	PlayerName = "Glen Joey";
+	GameLevel = "FirstPersonExampleMap";
 	PlayerLocation = FVector(0.f, 0.f, 0.f);
 
 }

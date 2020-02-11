@@ -22,6 +22,9 @@ public:
 	UPROPERTY(EditAnywhere)
 	FString PlayerName;
 
+	UPROPERTY(EditAnywhere)
+	FString GameLevel;
+
 	UMySaveGame();
 	
 };

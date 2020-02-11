@@ -106,6 +106,22 @@ void AOrphanageCharacter::BeginPlay()
 		VR_Gun->SetHiddenInGame(true, true);
 		Mesh1P->SetHiddenInGame(false, true);
 	}
+
+	// Load Player Position
+	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+
+	if (GetWorld()->GetName() == SaveGameInstance->GameLevel) {
+
+		this->SetActorLocation(SaveGameInstance->PlayerLocation);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Player Position Loaded"));
+	}
+
+	
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Load Player Default Position"));
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -314,6 +330,7 @@ void AOrphanageCharacter::SaveGame() {
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
 
 	UE_LOG(LogTemp, Warning, TEXT("Saved"));
@@ -328,6 +345,7 @@ void AOrphanageCharacter::LoadGame() {
 
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
 
 	UE_LOG(LogTemp, Warning, TEXT("Loaded"));
