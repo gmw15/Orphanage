@@ -109,12 +109,21 @@ void AOrphanageCharacter::BeginPlay()
 
 	// Load Player Position
 	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+	
+	if (GetWorld()->GetName() == "FirstPersonExampleMap") {
 
-	if (GetWorld()->GetName() == SaveGameInstance->GameLevel) {
-
+		SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
 		this->SetActorLocation(SaveGameInstance->PlayerLocation);
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Player Position Loaded"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Player Position Loaded From First Slot"));
+
+	}
+
+	else if (GetWorld()->GetName() == "FirstPersonExampleMap2") {
+
+		SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot2", 0));
+		this->SetActorLocation(SaveGameInstance->PlayerLocation);
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Player Position Loaded From Second Slot"));
+
 	}
 
 	
@@ -325,29 +334,75 @@ bool AOrphanageCharacter::EnableTouchscreenMovement(class UInputComponent* Playe
 void AOrphanageCharacter::SaveGame() {
 	
 	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-	SaveGameInstance->PlayerLocation = this->GetActorLocation();
-	UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+	if (GetWorld()->GetName() == "FirstPersonExampleMap") {
 
-	UE_LOG(LogTemp, Warning, TEXT("Saved"));
+		SaveGameInstance->PlayerLocation = this->GetActorLocation();
+		SaveGameInstance->GameLevel = GetWorld()->GetName();
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+		UE_LOG(LogTemp, Warning, TEXT("Saved"));
+
+	}
+
+	else if (GetWorld()->GetName() == "FirstPersonExampleMap2") {
+
+		SaveGameInstance->PlayerLocation = this->GetActorLocation();
+		SaveGameInstance->GameLevel = GetWorld()->GetName();
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot2"), 0);
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Saved 2"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+		UE_LOG(LogTemp, Warning, TEXT("Saved 2"));
+
+	}
+
+	
 
 }
 
 void AOrphanageCharacter::LoadGame() {
 
-	UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
-	SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
-	this->SetActorLocation(SaveGameInstance->PlayerLocation);
+	if (GetWorld()->GetName() == "FirstPersonExampleMap") {
 
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+		UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+		SaveGameInstance->GameLevel = GetWorld()->GetName();
+		this->SetActorLocation(SaveGameInstance->PlayerLocation);
 
-	UE_LOG(LogTemp, Warning, TEXT("Loaded"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+		UE_LOG(LogTemp, Warning, TEXT("Loaded"));
+
+	}
+
+	else if (GetWorld()->GetName() == "FirstPersonExampleMap2") {
+
+		UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass()));
+		SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot("MySlot2", 0));
+		SaveGameInstance->GameLevel = GetWorld()->GetName();
+		this->SetActorLocation(SaveGameInstance->PlayerLocation);
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, TEXT("Game Loaded 2"));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerName));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->GameLevel));
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Green, FString(SaveGameInstance->PlayerLocation.ToString()));
+
+		UE_LOG(LogTemp, Warning, TEXT("Loaded 2"));
+
+	}
+
+	
 
 }
